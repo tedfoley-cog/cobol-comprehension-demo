@@ -16,6 +16,7 @@ from analysis.parse_jcl import parse_all_jcl
 from analysis.build_dependency_graph import build_graph
 from analysis.find_dead_code import find_dead_code
 from analysis.trace_data_lineage import trace_lineage
+from analysis.deep_analysis import run_deep_analysis
 
 
 def generate_all(source_dir: Path, output_dir: Path) -> dict:
@@ -79,13 +80,20 @@ def generate_all(source_dir: Path, output_dir: Path) -> dict:
     lineage_data = lineage.to_dict()
     _write_json(output_dir / "data_lineage.json", lineage_data)
 
-    # 6. Summary report
+    # 6. Deep analysis (field-level cross-referencing)
+    print("Running deep analysis...")
+    deep = run_deep_analysis(programs, copybooks)
+    deep_data = deep.to_dict()
+    _write_json(output_dir / "deep_analysis.json", deep_data)
+
+    # 7. Summary report
     summary = {
         "source_directory": str(source_dir),
         "inventory": inventory["summary"],
         "dependency_graph": graph_data["summary"],
         "dead_code": dead_data["summary"],
         "data_lineage": lineage_data["summary"],
+        "deep_analysis": deep_data["summary"],
     }
     _write_json(output_dir / "summary.json", summary)
 
@@ -102,6 +110,11 @@ def generate_all(source_dir: Path, output_dir: Path) -> dict:
     print(f"  Dead copybooks:        {summary['dead_code']['dead_copybooks']}")
     print(f"  Shared copybooks:      {summary['data_lineage']['shared_copybooks']}")
     print(f"  Data flows traced:     {summary['data_lineage']['total_flows']}")
+    print(f"  Field cross-refs:      {summary['deep_analysis']['fields_crossreferenced']}")
+    print(f"  Implicit connections:  {summary['deep_analysis']['implicit_connections']}")
+    print(f"  REDEFINES chains:      {summary['deep_analysis']['redefines_chains']}")
+    print(f"  COMMAREA flows:        {summary['deep_analysis']['commarea_flows']}")
+    print(f"  High-risk fields:      {summary['deep_analysis']['high_risk_fields']}")
     print("=" * 60)
     print(f"\nDashboard data written to: {output_dir}")
     print("Open dashboard/index.html to view results.")
