@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COBOL Comprehension &mdash; Demo Workflow</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f7fa;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      color: #fff;
+      text-align: center;
+      padding: 2rem 1rem 1.75rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,.15);
+    }
+    header h1 {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    header p {
+      margin-top: .5rem;
+      font-size: .95rem;
+      color: #94a3b8;
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1400px;
+      padding: 2rem 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    #flowchart {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .mermaid svg { margin: 0 auto; display: block; }
+
+    .legend {
+      width: 100%;
+      max-width: 1400px;
+      padding: 0 1rem 2.5rem;
+    }
+    .legend-inner {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .legend-title {
+      font-weight: 600;
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #64748b;
+      margin-right: .5rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      font-size: .85rem;
+      color: #334155;
+    }
+    .legend-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 1rem;
+      font-size: .8rem;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      background: #fff;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 1.25rem .75rem 1rem; }
+      main { padding: 1rem .5rem; }
+      .legend-inner { padding: 1rem; gap: .75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>COBOL Comprehension &mdash; Demo Workflow</h1>
+    <p>End-to-end AI-driven analysis of a mainframe COBOL codebase</p>
+  </header>
+
+  <main>
+    <div id="flowchart">
+      <pre class="mermaid">
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor':      '#dbeafe',
+    'primaryTextColor':  '#1e293b',
+    'primaryBorderColor':'#3b82f6',
+    'secondaryColor':    '#f0fdf4',
+    'tertiaryColor':     '#fef3c7',
+    'lineColor':         '#64748b',
+    'fontSize':          '14px',
+    'nodeTextColor':     '#1e293b'
+  },
+  'flowchart': {
+    'useMaxWidth': false,
+    'htmlLabels': false,
+    'padding': 20,
+    'nodeSpacing': 30,
+    'rankSpacing': 40
+  }
+}}%%
+
+flowchart TD
+  COBOL[COBOL Codebase - AWS Card Demo]
+  PROMPT[Prompt Devin]
+
+  subgraph COMPREHENSION [Devin Comprehension Pipeline]
+    direction TB
+    PARSE[Parse Programs]
+    COPY[Trace Copybooks]
+    DEPS[Map Dependencies]
+    BATCH[Analyze Batch Flows]
+    DEAD[Identify Dead Code]
+    LINEAGE[Trace Data Lineage]
+  end
+
+  DASHBOARD[Generate Dashboard]
+  VIEW[Open in Browser]
+  CONVERT[Convert to Python]
+
+  COBOL --> PROMPT
+  PROMPT --> PARSE
+  PARSE --> COPY
+  PARSE --> BATCH
+  PARSE --> DEAD
+  COPY --> DEPS
+  DEPS --> LINEAGE
+  LINEAGE --> DASHBOARD
+  BATCH --> DASHBOARD
+  DEAD --> DASHBOARD
+  DASHBOARD --> VIEW
+  VIEW -.-> CONVERT
+
+  classDef source    fill:#d1fae5,stroke:#059669,stroke-width:2px,color:#064e3b
+  classDef trigger   fill:#e0e7ff,stroke:#6366f1,stroke-width:2px,color:#312e81
+  classDef pipeline  fill:#dbeafe,stroke:#3b82f6,stroke-width:1.5px,color:#1e3a8a
+  classDef output    fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#78350f
+  classDef optional  fill:#f3e8ff,stroke:#a855f7,stroke-width:2px,color:#581c87
+
+  class COBOL source
+  class PROMPT trigger
+  class PARSE,COPY,DEPS,BATCH,DEAD,LINEAGE pipeline
+  class DASHBOARD,VIEW output
+  class CONVERT optional
+      </pre>
+    </div>
+  </main>
+
+  <section class="legend">
+    <div class="legend-inner">
+      <span class="legend-title">Legend</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#d1fae5;border:2px solid #059669;"></span> Source Codebase</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#e0e7ff;border:2px solid #6366f1;"></span> Devin Trigger</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#dbeafe;border:2px solid #3b82f6;"></span> Analysis Step</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#fef3c7;border:2px solid #f59e0b;"></span> Visual Output</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#f3e8ff;border:2px solid #a855f7;"></span> Optional Modernization</span>
+    </div>
+  </section>
+
+  <footer>
+    COBOL Comprehension Demo &mdash; AI-driven mainframe analysis &copy; 2026
+  </footer>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: 'loose',
+      flowchart: {
+        htmlLabels: false,
+        curve: 'basis',
+        useMaxWidth: false
+      }
+    });
+  </script>
+</body>
+</html>
