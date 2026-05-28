@@ -1,0 +1,13 @@
+-- Seed data for USRSEC table (maps VSAM USRSEC file records)
+-- Passwords stored as plaintext to match the COBOL original where
+-- SEC-USR-PWD is compared directly: IF SEC-USR-PWD = WS-USER-PWD
+-- In production, these would be bcrypt-hashed.
+
+INSERT INTO USRSEC (SEC_USR_ID, SEC_USR_FNAME, SEC_USR_LNAME, SEC_USR_PWD, SEC_USR_TYPE)
+VALUES ('ADMIN001', 'ADMIN', 'USER', 'ADMIN001', 'A');
+
+INSERT INTO USRSEC (SEC_USR_ID, SEC_USR_FNAME, SEC_USR_LNAME, SEC_USR_PWD, SEC_USR_TYPE)
+VALUES ('USER0001', 'JOHN', 'DOE', 'USER0001', 'U');
+
+INSERT INTO USRSEC (SEC_USR_ID, SEC_USR_FNAME, SEC_USR_LNAME, SEC_USR_PWD, SEC_USR_TYPE)
+VALUES ('USER0002', 'JANE', 'SMITH', 'USER0002', 'U');
