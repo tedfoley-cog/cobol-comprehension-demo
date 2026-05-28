@@ -1,9 +1,8 @@
 package com.carddemo.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -35,7 +34,7 @@ public class User {
     @Column(name = "SEC_USR_PWD", length = 8)
     private String password;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = UserTypeConverter.class)
     @Column(name = "SEC_USR_TYPE", length = 1)
     private UserType type;
 
