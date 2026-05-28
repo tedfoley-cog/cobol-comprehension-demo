@@ -72,7 +72,7 @@ def _estimate_pic_size(pic: str) -> int:
     pic = pic.upper().rstrip(".")
 
     # Strip everything after common non-PIC keywords
-    for kw in ("VALUE", "JUSTIFIED", "JUST", "BLANK", "OCCURS", "SYNC", "USAGE"):
+    for kw in ("VALUE", "JUSTIFIED", "JUST", "BLANK", "OCCURS", "SYNC"):
         idx = pic.find(kw)
         if idx > 0:
             pic = pic[:idx]
