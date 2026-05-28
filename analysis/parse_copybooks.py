@@ -63,8 +63,19 @@ RE_VALUE = re.compile(r"VALUE\s+(.+?)\.?\s*$", re.IGNORECASE)
 
 
 def _estimate_pic_size(pic: str) -> int:
-    """Estimate byte size from a PIC clause."""
+    """Estimate byte size from a PIC clause.
+
+    The input may include trailing USAGE modifiers (COMP, COMP-3) from the
+    field definition line. We strip non-PIC keywords like VALUE, JUSTIFIED,
+    etc. before counting characters.
+    """
     pic = pic.upper().rstrip(".")
+
+    # Strip everything after common non-PIC keywords
+    for kw in ("VALUE", "JUSTIFIED", "JUST", "BLANK", "OCCURS", "SYNC", "USAGE"):
+        idx = pic.find(kw)
+        if idx > 0:
+            pic = pic[:idx]
 
     # COMP / COMP-3 modifiers change storage
     if "COMP-3" in pic or "PACKED" in pic:
@@ -86,7 +97,7 @@ def _estimate_pic_size(pic: str) -> int:
     # Expand X(nn), 9(nn), A(nn) notation
     for m in re.finditer(r"[XA9]\((\d+)\)", pic):
         size += int(m.group(1))
-    # Count standalone X, 9, A
+    # Count standalone X, 9, A characters not in X(nn) notation
     stripped = re.sub(r"[XA9]\(\d+\)", "", pic)
     size += stripped.count("X") + stripped.count("9") + stripped.count("A")
     # V (implied decimal) doesn't add bytes
@@ -141,7 +152,9 @@ def parse_copybook_file(path: Path) -> Copybook:
         byte_size = 0
         if pic_match:
             picture = (pic_match.group(1) or pic_match.group(2)).rstrip(".")
-            byte_size = _estimate_pic_size(picture + " " + rest)
+            # Pass USAGE modifiers (COMP/COMP-3) after the PIC match
+            after_pic = rest[pic_match.end():]
+            byte_size = _estimate_pic_size(picture + " " + after_pic)
 
         # Reset offset for new 01-level
         if level == 1 or level == 77:
